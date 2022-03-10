@@ -86,11 +86,15 @@ void raise3() {
 void raise4() {
     omp_lock_t mutex;
 
+    int idx;
+
     omp_init_lock(&mutex);
     int number = 7;
 #pragma omp parallel shared(mutex, number) private(idx)
     {
         while (number != -1) {
+            idx = omp_get_thread_num();
+
             omp_set_lock(&mutex);
             if (omp_get_thread_num() == number) {
 #pragma omp critical
